@@ -2,6 +2,8 @@
 #include "device.h"
 #include "i2c-dev.h"
 
+#ifndef _GFXFONT_H_
+#define _GFXFONT_H_
 typedef struct {
 	uint16_t bitmapOffset;     ///< Pointer into GFXfont->bitmap
 	uint8_t  width;            ///< Bitmap dimensions in pixels
@@ -19,7 +21,7 @@ typedef struct {
     uint8_t   last;        ///< ASCII extents (last char)
 	uint8_t   yAdvance;    ///< Newline distance (y axis)
 } GFXfont;
-
+#endif
 
 class OLED_GFX : public Device {
 	private:
