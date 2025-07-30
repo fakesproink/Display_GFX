@@ -31,7 +31,7 @@ class OLED_GFX : public Device {
 		uint8_t flag, set_flag, clr_flag;
 		bool sh1106;
 		// properties required for print
-		int sRow, sCol, mRow, mCol, gRow, gCol;	// cursor positions for small fixed, medium fixed, and gfx fonts
+		int sRow, sCol, mRow, mCol, gRow, gCol, hPos;	// cursor positions for small fixed, medium fixed, and gfx fonts
 		uint8_t bufr[135], *bufPtr;				// buffer to output a line: 6 bytes start address, 0x40, 128 bytes data
 		uint8_t buf2[135], *bf2Ptr;				// for second line of Large characters
 		// properties required for printGFX

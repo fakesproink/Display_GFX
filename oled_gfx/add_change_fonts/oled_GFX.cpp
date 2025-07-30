@@ -100,7 +100,7 @@ void OLED_GFX::clear(int chipSet, int orientation) {
 }
 
 void OLED_GFX::setCursor(int row, int col, int lines){
-	int hPos = (lines == 1 ? 6 : 10) * (col % (lines == 1 ? 21 : 14));
+	hPos = (lines == 1 ? 6 : 9) * (col % (lines == 1 ? 21 : 14));
 	if( sh1106)	hPos += 2;			// shift 2 bits if SH1106
 //	printf("mrow %d, mcol %d, hPos %d\n", row, col, hPos);
 	bufPtr = bufr;
@@ -125,6 +125,7 @@ void OLED_GFX::setCursor(int row, int col, int lines){
 
 void OLED_GFX::print5x7(char chr){
 	if(chr == '\n'){		// handle new line, clear to end of line and position cursor to start of next line
+        bufPtr += 6 * (21-sCol) + 2;
 		sCol = 21;
 		return;
 	}
@@ -148,7 +149,7 @@ void OLED_GFX::printSmall(int row, int col, char *str){
 			print5x7(*str++);
 			if(sCol > 20){
 //		printf("1sRow %d, sCol %d, char %c, bufr index %d\n", sRow, sCol, *str, bufPtr-bufr);
-				i2cPtr->write(0, address, bufr, sizeof(bufr));
+				i2cPtr->write(0, address, bufr, bufPtr-bufr);
 				sRow++;		// wrap to next line
 				sRow &= 7;	// if past last line, wrap to first line
 				sCol = 0;
@@ -170,7 +171,9 @@ uint8_t getBit(const uint8_t *bitArray, uint16_t bitNumber){
 
 void OLED_GFX::print9x15(char chr){
 	if(chr == '\n'){		// handle new line, clear to end of line and position cursor to start of next line
-		mCol = 14;
+        bufPtr += 9 * (14-mCol) + 2;
+        bf2Ptr += 9 * (14-mCol) + 2;
+		mCol = 15;
 		return;
 	}
 	uint16_t i, j, k, c = (chr & 0x7f) - 32;
@@ -200,9 +203,9 @@ void OLED_GFX::printLarge(int row, int col, char *str){
 		*bf2Ptr++ = 0x40;	// data follows - lower page
 		while(*str){		// for every character in the string
 			print9x15(*str++);
-			if(mCol > 13){	// wrap text to the next line
-				i2cPtr->write(0, address, bufr, sizeof(bufr));
-				i2cPtr->write(0, address, buf2, sizeof(buf2));
+			if(mCol > 14){	// wrap text to the next line
+				i2cPtr->write(0, address, bufr, bufPtr-bufr);
+				i2cPtr->write(0, address, buf2, bf2Ptr-buf2);
 				mRow = (mRow + 2) & 7;
 				mCol = 0;
 				break;
