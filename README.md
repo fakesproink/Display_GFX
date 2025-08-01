@@ -1,2 +1,2 @@
-# OLED_GFX
-Plugin for controlling OLED screens with KidBright.
+# Display_GFX
+Plugin for controlling OLED and LED screens with KidBright.
